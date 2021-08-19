@@ -14,6 +14,7 @@
       </label>
     </div>
     <br />
+    <p>{{mst}}</p>
 
     <div class="mdc-data-table">
       <div class="mdc-data-table__table-container">
@@ -57,13 +58,13 @@
               class="mdc-data-table__row"
             >
               <th class="mdc-data-table__cell" scope="row">{{ item.id }}</th>
-              <td class="mdc-data-table__cell mdc-data-table__cell--numeric">
+              <td class="mdc-data-table__cell">
                 {{ item.name }}
               </td>
-              <td class="mdc-data-table__cell mdc-data-table__cell--numeric">
+              <td class="mdc-data-table__cell">
                 {{ item.altura }}
               </td>
-              <td class="mdc-data-table__cell mdc-data-table__cell--numeric">
+              <td class="mdc-data-table__cell">
                 {{ item.idade }}
               </td>
             </tr>
@@ -181,12 +182,16 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
       dataTable: [],
       searchKey: "",
       selected: null,
+      loading: true,
+      errored: false
     };
   },
   computed: {
@@ -200,7 +205,16 @@ export default {
       return items;
     },
   },
+  async created() {
+    try {
+      const res = await axios.get('http://localhost:3000/todos')
+      this.dataTable = res.data;
+    } catch(e) {
+      console.error(e)
+    }
+  },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>
