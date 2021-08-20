@@ -1,5 +1,6 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png">
+  <img alt="Vue logo" src="./assets/md.svg">
   <DataTable/>
 </template>
 
@@ -22,5 +23,9 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+#app img {
+  width: 100px;
+  margin-right: 20px;
 }
 </style>
