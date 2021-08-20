@@ -14,7 +14,6 @@
       </label>
     </div>
     <br />
-    <p>{{mst}}</p>
 
     <div class="mdc-data-table">
       <div class="mdc-data-table__table-container">
@@ -53,7 +52,7 @@
           </thead>
           <tbody class="mdc-data-table__content">
             <tr
-              v-for="(item, key) in filteredItems"
+              v-for="(item, key) in currentData"
               :key="key"
               class="mdc-data-table__row"
             >
@@ -125,12 +124,7 @@
                 role="listbox"
               >
                 <ul class="mdc-list">
-                  <li
-                    class="mdc-list-item mdc-list-item--selected"
-                    aria-selected="true"
-                    role="option"
-                    data-value="10"
-                  >
+                  <li class="mdc-list-item" role="option" data-value="10">
                     <span class="mdc-list-item__text">10</span>
                   </li>
                   <li class="mdc-list-item" role="option" data-value="25">
@@ -146,29 +140,35 @@
 
           <div class="mdc-data-table__pagination-navigation">
             <div class="mdc-data-table__pagination-total">
-              1‑10 of 100
+              {{ currentPage }} of {{ totalPage }}
             </div>
             <button
+              :disabled="currentPage <= 1"
+              @click="firstPage"
               class="mdc-icon-button material-icons mdc-data-table__pagination-button"
               data-first-page="true"
-              disabled
             >
               <div class="mdc-button__icon">first_page</div>
             </button>
             <button
+              :disabled="currentPage <= 1"
+              @click="goPrevious"
               class="mdc-icon-button material-icons mdc-data-table__pagination-button"
               data-prev-page="true"
-              disabled
             >
               <div class="mdc-button__icon">chevron_left</div>
             </button>
             <button
+              :disabled="!hasMore"
+              @click="goNext"
               class="mdc-icon-button material-icons mdc-data-table__pagination-button"
               data-next-page="true"
             >
               <div class="mdc-button__icon">chevron_right</div>
             </button>
             <button
+              :disabled="!hasMore"
+              @click="lastPage"
               class="mdc-icon-button material-icons mdc-data-table__pagination-button"
               data-last-page="true"
             >
@@ -182,7 +182,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   data() {
@@ -190,8 +190,12 @@ export default {
       dataTable: [],
       searchKey: "",
       selected: null,
+      currentPage: 1,
+      totalPage: 0,
+      limit: 2,
       loading: true,
-      errored: false
+      errored: false,
+      total: 0,
     };
   },
   computed: {
@@ -204,17 +208,46 @@ export default {
       });
       return items;
     },
+    currentData() {
+      const start = this.currentPage * this.limit - this.limit;
+      const end = start + this.limit;
+      return this.dataTable.slice(start, end);
+    },
+    hasMore() {
+      return this.currentPage < this.total / this.limit;
+    },
+  },
+  methods: {
+    goPrevious() {
+      this.currentPage = this.currentPage - 1;
+    },
+    goNext() {
+      this.currentPage = this.currentPage + 1;
+    },
+    firstPage() {
+      this.currentPage = 1;
+    },
+    lastPage() {
+      this.currentPage = this.totalPage;
+    },
   },
   async created() {
     try {
-      const res = await axios.get('http://localhost:3000/todos')
+      const res = await axios.get("http://localhost:3000/todos");
+      // const res = await axios.get('http://localhost:3000/todos/?_page=1&_limit=20')
       this.dataTable = res.data;
-    } catch(e) {
-      console.error(e)
+      this.total = this.dataTable.length;
+
+      if (this.total / this.limit > Math.round(this.total / this.limit)) {
+        this.totalPage = Math.round(this.total / this.limit) + 1;
+      } else {
+        this.totalPage = Math.round(this.total / this.limit);
+      }
+    } catch (e) {
+      console.error(e);
     }
   },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
