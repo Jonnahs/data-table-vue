@@ -193,8 +193,6 @@ export default {
       currentPage: 1,
       totalPage: 0,
       limit: 2,
-      loading: true,
-      errored: false,
       total: 0,
     };
   },
@@ -249,5 +247,3 @@ export default {
   },
 };
 </script>
-
-<style scoped></style>
