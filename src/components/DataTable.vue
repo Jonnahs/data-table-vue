@@ -194,18 +194,18 @@ export default {
       totalPage: 0,
       limit: 2,
       total: 0,
-      watchItens: 0,
+      newTableItens: 0,
     };
   },
   watch: {
     searchKey: function() {
       this.total = this.dataTable.length;
-      this.watchItens = this.dataTable.filter((item) => {
+      this.newTableItens = this.dataTable.filter((item) => {
         return (
           item.name.toLowerCase().indexOf(this.searchKey.toLowerCase()) > -1
         );
       });
-      this.total = this.watchItens.length;
+      this.total = this.newTableItens.length;
 
       if (this.total / this.limit > Math.round(this.total / this.limit)) {
         this.totalPage = Math.round(this.total / this.limit) + 1;
