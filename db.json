@@ -5,6 +5,6 @@
         { "id": "4", "name": "Ana Maria", "altura": "1,65", "idade": "40" },
         { "id": "5", "name": "Maria do Carmo", "altura": "1,80", "idade": "35" },
         { "id": "6", "name": "José Carlos", "altura": "1,70", "idade": "32" },
-        { "id": "7", "name": "Monica de Sousa", "altura": "1,720", "idade": "33" }
+        { "id": "7", "name": "Monica de Sousa", "altura": "1,72", "idade": "33" }
     ]
 }

@@ -194,22 +194,43 @@ export default {
       totalPage: 0,
       limit: 2,
       total: 0,
+      watchItens: 0,
     };
   },
-  computed: {
-    filteredItems() {
-      let items = [];
-      items = this.dataTable.filter((item) => {
+  watch: {
+    searchKey: function() {
+      this.total = this.dataTable.length;
+      this.watchItens = this.dataTable.filter((item) => {
         return (
           item.name.toLowerCase().indexOf(this.searchKey.toLowerCase()) > -1
         );
       });
-      return items;
+      this.total = this.watchItens.length;
+
+      if (this.total / this.limit > Math.round(this.total / this.limit)) {
+        this.totalPage = Math.round(this.total / this.limit) + 1;
+      } else {
+        this.totalPage = Math.round(this.total / this.limit);
+      }
     },
+  },
+  computed: {
     currentData() {
-      const start = this.currentPage * this.limit - this.limit;
-      const end = start + this.limit;
-      return this.dataTable.slice(start, end);
+      let items = [];
+      if (this.searchKey) {
+        items = this.dataTable.filter((item) => {
+          return (
+            item.name.toLowerCase().indexOf(this.searchKey.toLowerCase()) > -1
+          );
+        });
+        const start = this.currentPage * this.limit - this.limit;
+        const end = start + this.limit;
+        return items.slice(start, end);
+      } else {
+        const start = this.currentPage * this.limit - this.limit;
+        const end = start + this.limit;
+        return this.dataTable.slice(start, end);
+      }
     },
     hasMore() {
       return this.currentPage < this.total / this.limit;
